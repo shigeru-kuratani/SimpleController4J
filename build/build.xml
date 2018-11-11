@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SimpleController4J" default="makejar" basedir="..">
+
+	<!-- source directory -->
+	<property name="dir.src" location="${basedir}/src" />
+	<!-- lib directory -->
+	<property name="dir.lib" location="${basedir}/lib" />
+	<path id="build.lib">
+        <fileset dir="${dir.lib}" >
+            <include name="*" />
+        </fileset>
+    </path>
+	<!-- jar file name -->
+	<property name="jar.name" value="simplecontroller4j.jar" />
+	<!-- target directory -->
+	<property name="dir.target" location="${basedir}/jar" />
+	<!-- classes directory -->
+	<property name="dir.target.classes" location="${basedir}/jar/classes" />
+	<!-- source code encoding -->
+	<property name="src.enc" value="UTF-8" />
+
+	<!-- target of clean the directory for compiling java files -->
+	<target name="clean">
+		<delete dir="${dir.target}" />
+	</target>
+
+	<!-- target of copiling java files -->
+	<target name="compile" depends="clean">
+		<mkdir dir="${dir.target}"/>
+		<mkdir dir="${dir.target.classes}"/>
+        <javac classpathref="build.lib"
+			   srcdir="${dir.src}"
+		       destdir="${dir.target.classes}"
+		       encoding="${src.enc}"
+		       source="1.8"
+        	   target="1.8"
+		       includeAntRuntime="false"
+		       debug="true">
+        	<compilerarg value="-parameters" />
+        </javac>
+	</target>
+
+	<!-- target of making jar file from compiled java classes -->
+	<target name="makejar" depends="compile">
+		<jar basedir="${dir.target.classes}" destfile="${dir.target}/${jar.name}" />
+	</target>
+</project>

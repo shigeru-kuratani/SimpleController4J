@@ -1,0 +1,9 @@
+com.benefiss.simplecontroller4j.annotation
+com.benefiss.simplecontroller4j.aspect
+com.benefiss.simplecontroller4j.aspectmapping
+com.benefiss.simplecontroller4j.binder
+com.benefiss.simplecontroller4j.execute
+com.benefiss.simplecontroller4j.findclass
+com.benefiss.simplecontroller4j.requestmapping
+com.benefiss.simplecontroller4j.routing
+com.benefiss.simplecontroller4j.servlet
