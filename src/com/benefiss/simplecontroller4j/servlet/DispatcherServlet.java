@@ -25,6 +25,7 @@ import com.benefiss.simplecontroller4j.aspect.Aspect;
 import com.benefiss.simplecontroller4j.aspectmapping.AspectMapping;
 import com.benefiss.simplecontroller4j.binder.DataBinder;
 import com.benefiss.simplecontroller4j.execute.Executor;
+import com.benefiss.simplecontroller4j.findclass.FindClass;
 import com.benefiss.simplecontroller4j.requestmapping.RequestMapping;
 import com.benefiss.simplecontroller4j.routing.Router;
 /**
@@ -43,11 +44,15 @@ import com.benefiss.simplecontroller4j.routing.Router;
  *               例：[at]Route(path = "/init", method = Method.GET)
  * </pre>
  * @author  Shigeru Kuratani
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class DispatcherServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    private List<Class<?>> classList;
+
+    private boolean init = false;
 
     /**
      * <p>serviceメソッド（ディスパッチ処理）</p>
@@ -66,6 +71,18 @@ public class DispatcherServlet extends HttpServlet {
         Method requestMethod = getRequestMethod(request);
 
         //-------------------------------------------//
+        // コントローラ・アスペクトクラスロード
+        //-------------------------------------------//
+        if (!init) {
+	        try {
+	        	classList = FindClass.findClasses(new File(classesPath));
+			} catch (ClassNotFoundException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+	        init = true;
+        }
+
+        //-------------------------------------------//
         // リソースファイルの場合はファイル内容を返却
         //-------------------------------------------//
         Pattern pattern = Pattern.compile("^/[\\s\\S]+\\.[a-zA-Z]{1,}$");
@@ -79,11 +96,7 @@ public class DispatcherServlet extends HttpServlet {
 		// ルーティング探索（ルーティングクラス・メソッド探索）
 		//-------------------------------------------//
 		RequestMapping requestMapping;
-		try {
-			requestMapping = new Router().findRoutingClass(requestPath, requestMethod, classesPath);
-		} catch (ClassNotFoundException e) {
-			throw new ServletException(e.getMessage(), e);
-		}
+		requestMapping = new Router().findRoutingClass(requestPath, requestMethod, classesPath, classList);
 
 		//-------------------------------------------//
 		// データバインディング処理
@@ -99,12 +112,7 @@ public class DispatcherServlet extends HttpServlet {
 		//-------------------------------------------//
 		// アスペクト探索（アスペクトクラス・メソッド探索）
 		//-------------------------------------------//
-		List<AspectMapping> aspectMappingList;
-		try {
-			aspectMappingList = new Aspect().findAspectClass(requestMapping, classesPath);
-		} catch (ClassNotFoundException e) {
-			throw new ServletException(e.getMessage(), e);
-		}
+		List<AspectMapping> aspectMappingList = new Aspect().findAspectClass(requestMapping, classesPath, classList);
 
 		// エグゼキューター
 		Executor executor = new Executor();

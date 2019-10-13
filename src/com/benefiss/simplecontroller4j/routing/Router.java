@@ -1,12 +1,11 @@
 package com.benefiss.simplecontroller4j.routing;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import com.benefiss.simplecontroller4j.annotation.Controller;
 import com.benefiss.simplecontroller4j.annotation.Route;
-import com.benefiss.simplecontroller4j.findclass.FindClass;
 import com.benefiss.simplecontroller4j.requestmapping.RequestMapping;
 
 /**
@@ -20,7 +19,7 @@ import com.benefiss.simplecontroller4j.requestmapping.RequestMapping;
  * </pre>
  *
  * @author  Shigeru Kuratani
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class Router {
 
@@ -37,15 +36,15 @@ public class Router {
 	 * @param  requestPath   リクエストパス
 	 * @param  requestMethod リクエストメソッド
 	 * @param  classesPath   classesディレクトリ絶対パス
+	 * @param  classList     コントローラclassインスタンスリスト
 	 * @return routingMap    ルーティング情報マップ（クラス・メソッド）
-	 * @throws ClassNotFoundException 探索したクラスが存在しない場合
 	 */
 	public RequestMapping findRoutingClass(String requestPath,
 										   com.benefiss.simplecontroller4j.annotation.Method requestMethod,
-										   String classesPath)
-									throws ClassNotFoundException {
+										   String classesPath,
+										   List<Class<?>> classList) {
 
-        for (Class<?> clazz : FindClass.findClasses(new File(classesPath))) {
+        for (Class<?> clazz : classList) {
 
             // インターフェイスの場合はスキップ
             if (clazz.isInterface()) continue;

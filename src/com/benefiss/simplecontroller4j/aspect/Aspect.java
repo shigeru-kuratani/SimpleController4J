@@ -1,6 +1,5 @@
 package com.benefiss.simplecontroller4j.aspect;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import com.benefiss.simplecontroller4j.annotation.Around;
 import com.benefiss.simplecontroller4j.annotation.Before;
 import com.benefiss.simplecontroller4j.annotation.JoinPoint;
 import com.benefiss.simplecontroller4j.aspectmapping.AspectMapping;
-import com.benefiss.simplecontroller4j.findclass.FindClass;
 import com.benefiss.simplecontroller4j.requestmapping.RequestMapping;
 
 /**
@@ -26,7 +24,7 @@ import com.benefiss.simplecontroller4j.requestmapping.RequestMapping;
  * </pre>
  *
  * @author  Shigeru Kuratani
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class Aspect {
 
@@ -45,13 +43,13 @@ public class Aspect {
 	 *
 	 * @param  requestMapping    ルーティング情報マップ（クラス・メソッド）
 	 * @param  classesPath       classesディレクトリ絶対パス
+	 * @param  classList         コントローラclassインスタンスリスト
 	 * @return aspectMappingList アスペクトマッピングリスト
-	 * @throws ClassNotFoundException 探索したクラスが存在しない場合
 	 */
-	public List<AspectMapping> findAspectClass(RequestMapping requestMapping, String classesPath)
-										   throws ClassNotFoundException {
+	public List<AspectMapping> findAspectClass(RequestMapping requestMapping, String classesPath,
+											   List<Class<?>> classList) {
 
-        for (Class<?> clazz : FindClass.findClasses(new File(classesPath))) {
+        for (Class<?> clazz : classList) {
 
             // インターフェイスの場合はスキップ
             if (clazz.isInterface()) continue;
