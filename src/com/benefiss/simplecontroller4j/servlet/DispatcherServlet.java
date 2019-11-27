@@ -50,8 +50,10 @@ public class DispatcherServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    // ロードされたコントローラクラス・アスペクトクラス
     private List<Class<?>> classList;
 
+    // 初期化フラグ
     private boolean init = false;
 
     /**
@@ -96,7 +98,7 @@ public class DispatcherServlet extends HttpServlet {
 		// ルーティング探索（ルーティングクラス・メソッド探索）
 		//-------------------------------------------//
 		RequestMapping requestMapping;
-		requestMapping = new Router().findRoutingClass(requestPath, requestMethod, classesPath, classList);
+		requestMapping = new Router().findRoutingClass(requestPath, requestMethod, classList);
 
 		//-------------------------------------------//
 		// データバインディング処理
@@ -112,7 +114,7 @@ public class DispatcherServlet extends HttpServlet {
 		//-------------------------------------------//
 		// アスペクト探索（アスペクトクラス・メソッド探索）
 		//-------------------------------------------//
-		List<AspectMapping> aspectMappingList = new Aspect().findAspectClass(requestMapping, classesPath, classList);
+		List<AspectMapping> aspectMappingList = new Aspect().findAspectClass(requestMapping, classList);
 
 		// エグゼキューター
 		Executor executor = new Executor();

@@ -35,13 +35,11 @@ public class Router {
 	 *
 	 * @param  requestPath   リクエストパス
 	 * @param  requestMethod リクエストメソッド
-	 * @param  classesPath   classesディレクトリ絶対パス
 	 * @param  classList     コントローラclassインスタンスリスト
 	 * @return routingMap    ルーティング情報マップ（クラス・メソッド）
 	 */
 	public RequestMapping findRoutingClass(String requestPath,
 										   com.benefiss.simplecontroller4j.annotation.Method requestMethod,
-										   String classesPath,
 										   List<Class<?>> classList) {
 
         for (Class<?> clazz : classList) {

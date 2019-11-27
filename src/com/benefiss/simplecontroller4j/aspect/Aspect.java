@@ -42,12 +42,10 @@ public class Aspect {
 	 * <p>アスペクトクラスを探索</p>
 	 *
 	 * @param  requestMapping    ルーティング情報マップ（クラス・メソッド）
-	 * @param  classesPath       classesディレクトリ絶対パス
 	 * @param  classList         コントローラclassインスタンスリスト
 	 * @return aspectMappingList アスペクトマッピングリスト
 	 */
-	public List<AspectMapping> findAspectClass(RequestMapping requestMapping, String classesPath,
-											   List<Class<?>> classList) {
+	public List<AspectMapping> findAspectClass(RequestMapping requestMapping, List<Class<?>> classList) {
 
         for (Class<?> clazz : classList) {
 
