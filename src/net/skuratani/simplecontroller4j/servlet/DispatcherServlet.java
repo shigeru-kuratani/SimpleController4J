@@ -44,7 +44,7 @@ import net.skuratani.simplecontroller4j.routing.Router;
  *               例：[at]Route(path = "/init", method = Method.GET)
  * </pre>
  * @author  Shigeru Kuratani
- * @version 0.0.3
+ * @version 0.0.4
  */
 public class DispatcherServlet extends HttpServlet {
 
@@ -108,6 +108,7 @@ public class DispatcherServlet extends HttpServlet {
 			bidingList = new DataBinder().getBidingList(getServletContext(), request, response, requestPath, requestMapping);
 		} catch (IllegalArgumentException | InvocationTargetException | IntrospectionException |
 				 InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}
 
@@ -127,6 +128,7 @@ public class DispatcherServlet extends HttpServlet {
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.BEFORE);
 		} catch (InstantiationException | IllegalAccessException |
 				 IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}
 
@@ -137,6 +139,7 @@ public class DispatcherServlet extends HttpServlet {
 		try {
 			responseString = executor.executeMethod(requestMapping, bidingList);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		} catch (InvocationTargetException ite) {
 			try {
@@ -144,9 +147,11 @@ public class DispatcherServlet extends HttpServlet {
 				// アスペクト実行(AFTER_THROWING)
 				//-------------------------------------------//
 				executor.executeAspect(request, response, aspectMappingList, JoinPoint.AFTER_THROWING);
+				ite.printStackTrace();
 				throw new ServletException(ite.getMessage(), ite);
 			} catch (InstantiationException | IllegalAccessException |
 					 IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 				throw new ServletException(e.getMessage(), e);
 			}
 		}
@@ -159,6 +164,7 @@ public class DispatcherServlet extends HttpServlet {
 				executor.executeAspect(request, response, aspectMappingList, JoinPoint.AFTER_RETURNING);
 			} catch (InstantiationException | IllegalAccessException |
 					 IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 				throw new ServletException(e.getMessage(), e);
 			}
 		}
@@ -171,6 +177,7 @@ public class DispatcherServlet extends HttpServlet {
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.AROUND);
 		} catch (InstantiationException | IllegalAccessException |
 				 IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}
 

@@ -1,9 +1,9 @@
 package net.skuratani.simplecontroller4j.annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 /**
  * <p>リクエストマッピング アノテーション</p>
@@ -19,11 +19,11 @@ import java.lang.annotation.ElementType;
  * </pre>
  *
  * @author  Shigeru Kuratani
- * @version 0.0.3
+ * @version 0.0.4
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Route {
-	String path();
+	String path() default "";
 	Method method() default Method.ALL;
 }
