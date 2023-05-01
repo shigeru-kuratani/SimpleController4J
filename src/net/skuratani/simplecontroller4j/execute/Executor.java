@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import net.skuratani.simplecontroller4j.annotation.JoinPoint;
 import net.skuratani.simplecontroller4j.aspectmapping.AspectMapping;
@@ -41,9 +41,12 @@ public class Executor {
 	 * @throws IllegalAccessException    実行メソットアクセスに異常が発生した場合
 	 * @throws IllegalArgumentException  実行メソッッド実行の引数に不正がある場合
 	 * @throws InvocationTargetException 実行メソッドがスローする例外をラップする例外
+	 * @throws SecurityException         セキュリティ侵害が発生した場合
+	 * @throws NoSuchMethodException     パラメータ格納インスタンスの生成に失敗した場合
 	 */
 	public String executeMethod(RequestMapping requestMapping, List<Map<String, Object>> bidingList)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+				   NoSuchMethodException, SecurityException {
 		// 実行クラス
 		Class<?> clazz = requestMapping.getRequestClass();
 		// 実行メソッド
@@ -62,7 +65,7 @@ public class Executor {
 				}
 			}
 		}
-		Object obj = clazz.newInstance();
+		Object obj = clazz.getConstructor().newInstance();
 		Object[] args = arguments.toArray(new Object[arguments.size()]);
 		responseString = (String) method.invoke(obj, args);
 
@@ -82,11 +85,14 @@ public class Executor {
 	 * @throws IllegalAccessException    実行メソットアクセスに異常が発生した場合
 	 * @throws IllegalArgumentException  実行メソッッド実行の引数に不正がある場合
 	 * @throws InvocationTargetException 実行メソッドがスローする例外をラップする例外
+	 * @throws SecurityException         セキュリティ侵害が発生した場合
+	 * @throws NoSuchMethodException     パラメータ格納インスタンスの生成に失敗した場合
 	 */
 	public void executeAspect(HttpServletRequest request, HttpServletResponse response,
 							  List<AspectMapping> aspectMappingList, JoinPoint joinPoint)
 							  throws InstantiationException, IllegalAccessException,
-							  		 IllegalArgumentException, InvocationTargetException {
+							  		 IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+									 SecurityException {
 
 		for (AspectMapping aspectMapping : aspectMappingList) {
 			if (aspectMapping.getJoinPoint() == joinPoint) {
@@ -105,7 +111,7 @@ public class Executor {
 					}
 				}
 				// メソッド実行
-				Object obj = clazz.newInstance();
+				Object obj = clazz.getConstructor().newInstance();
 				Object[] args = arguments.toArray(new Object[arguments.size()]);
 				method.invoke(obj, args);
 			}

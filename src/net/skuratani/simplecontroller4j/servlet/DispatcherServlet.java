@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import net.skuratani.simplecontroller4j.annotation.JoinPoint;
 import net.skuratani.simplecontroller4j.annotation.Method;
@@ -107,7 +107,7 @@ public class DispatcherServlet extends HttpServlet {
 		try {
 			bidingList = new DataBinder().getBidingList(getServletContext(), request, response, requestPath, requestMapping);
 		} catch (IllegalArgumentException | InvocationTargetException | IntrospectionException |
-				 InstantiationException | IllegalAccessException e) {
+				 InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}
@@ -127,7 +127,7 @@ public class DispatcherServlet extends HttpServlet {
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.AROUND);
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.BEFORE);
 		} catch (InstantiationException | IllegalAccessException |
-				 IllegalArgumentException | InvocationTargetException e) {
+				 IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}
@@ -138,7 +138,8 @@ public class DispatcherServlet extends HttpServlet {
 		String responseString = null;
 		try {
 			responseString = executor.executeMethod(requestMapping, bidingList);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+				 NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		} catch (InvocationTargetException ite) {
@@ -150,7 +151,7 @@ public class DispatcherServlet extends HttpServlet {
 				ite.printStackTrace();
 				throw new ServletException(ite.getMessage(), ite);
 			} catch (InstantiationException | IllegalAccessException |
-					 IllegalArgumentException | InvocationTargetException e) {
+					 IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				throw new ServletException(e.getMessage(), e);
 			}
@@ -163,7 +164,7 @@ public class DispatcherServlet extends HttpServlet {
 			try {
 				executor.executeAspect(request, response, aspectMappingList, JoinPoint.AFTER_RETURNING);
 			} catch (InstantiationException | IllegalAccessException |
-					 IllegalArgumentException | InvocationTargetException e) {
+					 IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				throw new ServletException(e.getMessage(), e);
 			}
@@ -176,7 +177,7 @@ public class DispatcherServlet extends HttpServlet {
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.AFTER);
 			executor.executeAspect(request, response, aspectMappingList, JoinPoint.AROUND);
 		} catch (InstantiationException | IllegalAccessException |
-				 IllegalArgumentException | InvocationTargetException e) {
+				 IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			throw new ServletException(e.getMessage(), e);
 		}

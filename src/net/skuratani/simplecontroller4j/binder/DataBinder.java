@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import net.skuratani.simplecontroller4j.requestmapping.RequestMapping;
 
@@ -55,6 +55,8 @@ public class DataBinder {
 	 * @throws IntrospectionException    プロパティーディスクリプタの生成に失敗した場合
 	 * @throws InvocationTargetException セッターメソッドの実行に失敗した場合
 	 * @throws IllegalArgumentException  セッターメソッドの実行引数に不正がある場合
+	 * @throws SecurityException         セキュリティ侵害が発生した場合
+	 * @throws NoSuchMethodException     パラメータ格納インスタンスの生成に失敗した場合
 	 */
 	public List<Map<String, Object>> getBidingList(ServletContext context,
 												   HttpServletRequest request,
@@ -63,7 +65,7 @@ public class DataBinder {
 												   RequestMapping requestMapping)
 									 throws InstantiationException, IllegalAccessException,
 									        IllegalArgumentException, InvocationTargetException,
-									        IntrospectionException {
+									        IntrospectionException, NoSuchMethodException, SecurityException {
 
 		// バインディングリスト
 		List<Map<String, Object>> bidingList = new ArrayList<>();
@@ -88,7 +90,6 @@ public class DataBinder {
 	 * @param  requestMapping リクエスト情報
 	 * @return pathBidingList パスバインドリスト
 	 */
-	@SuppressWarnings("serial")
 	protected List<Map<String, Object>> getPathBidingList(String requestPath, RequestMapping requestMapping) {
 
 		// パスバインディングリスト
@@ -223,14 +224,17 @@ public class DataBinder {
 	 * @throws IntrospectionException    プロパティーディスクリプタの生成に失敗した場合
 	 * @throws InvocationTargetException セッターメソッドの実行に失敗した場合
 	 * @throws IllegalArgumentException  セッターメソッドの実行引数に不正がある場合
+	 * @throws SecurityException         セキュリティ侵害が発生した場合
+	 * @throws NoSuchMethodException     パラメータ格納インスタンスの生成に失敗した場合
 	 */
-	@SuppressWarnings({ "unchecked", "serial", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected List<Map<String, Object>> getParamBindingList(ServletContext context,
 															HttpServletRequest request,
 															HttpServletResponse response,
 															RequestMapping requestMapping)
 									  throws InstantiationException, IllegalAccessException, IntrospectionException,
-									  		 IllegalArgumentException, InvocationTargetException {
+									  		 IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+											 SecurityException {
 
 		// フォームパラメータ取得
 		List<Map<String, Object>> paramBidingList = new ArrayList<>();
@@ -266,7 +270,7 @@ public class DataBinder {
 				&& (!(parameter.getType().isInstance(context)))
 				&& (!(parameter.getType().isInstance(request)))
 				&& (!(parameter.getType().isInstance(response)))) {
-				Object obj = parameter.getType().newInstance();
+				Object obj = parameter.getType().getConstructor().newInstance();
 				for (Field field : parameter.getType().getDeclaredFields()) {
 					for (int i = 0; i <  paramBidingList.size(); i++) {
 						Map.Entry<String, Object> paramEntry =  paramBidingList.get(i).entrySet().iterator().next();
@@ -293,7 +297,7 @@ public class DataBinder {
 	 * @param  entry           パラメータマップエントリ
 	 * @return パラメータ値を実行メソッド型キャストしたマップ
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Map<String, Object> castPramArrayValue(Parameter parameter, Map.Entry<String, Object> entry) {
 		// boolean型
 		if (parameter.getType().getComponentType() == boolean.class) {
@@ -359,7 +363,7 @@ public class DataBinder {
 	 * @param  entry           パラメータマップエントリ
 	 * @return パラメータ値を実行メソッド型キャストしたマップ
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Map<String, Object> castPramValue(Parameter parameter, Map.Entry<String, Object> entry) {
 
 		// boolean型
@@ -436,7 +440,7 @@ public class DataBinder {
 	 * @param  requestMapping リクエストマッピング情報
 	 * @return paramHttpReqResBidingList HTTPサーブレットリクエスト・レスポンス バインドリスト
 	 */
-	@SuppressWarnings({ "rawtypes", "serial", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected List<Map<String, Object>> getHttpCxtReqResBidingList(ServletContext context,
 																   HttpServletRequest request,
 			   													   HttpServletResponse response,
