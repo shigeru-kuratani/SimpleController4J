@@ -10,5 +10,5 @@ SimpleController4Jは、Javaサーブレットの小さな拡張（強化）で�
 サーブレットには存在しない実行メソッド引数へのデータバインディングなどを提供します。<br>
 サーブレット・JSPを使用したスモールスタートの為のフレームワークです。
 
-SimpleController4Jは、GPLv3(<a href="http://www.gnu.org/licenses/gpl.html" target="_blank">http://www.gnu.org/licenses/gpl.html</a>)に基づいて配布を致します。
+SimpleController4Jは、GPLv2 with the Classpath Exceptionbに基づいて配布を致します。
 
