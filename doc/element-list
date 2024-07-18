@@ -1,9 +1,0 @@
-net.skuratani.simplecontroller4j.annotation
-net.skuratani.simplecontroller4j.aspect
-net.skuratani.simplecontroller4j.aspectmapping
-net.skuratani.simplecontroller4j.binder
-net.skuratani.simplecontroller4j.execute
-net.skuratani.simplecontroller4j.findclass
-net.skuratani.simplecontroller4j.requestmapping
-net.skuratani.simplecontroller4j.routing
-net.skuratani.simplecontroller4j.servlet
